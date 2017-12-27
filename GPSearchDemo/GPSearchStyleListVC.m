@@ -6,15 +6,15 @@
 //  Copyright © 2016年 Gorpeln. All rights reserved.
 //
 
+#import "GPSearchStyleListVC.h"
 #import "GPSearchVC.h"
-#import "GPSearch.h"
 #import "SearchResultVC.h"
 
-@interface GPSearchVC () <GPSearchViewControllerDelegate>
+@interface GPSearchStyleListVC () <GPSearchVCDelegate>
 
 @end
 
-@implementation GPSearchVC
+@implementation GPSearchStyleListVC
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -54,7 +54,7 @@
     // 1.创建热门搜索
     NSArray *hotSeaches = @[@"Java", @"Python", @"Objective-C", @"Swift", @"C#", @"C++", @"PHP", @"C", @"Perl", @"Go", @"JavaScript", @"R", @"Ruby", @"MATLAB"];
     // 2. 创建控制器
-    GPSearchViewController *searchViewController = [GPSearchViewController searchViewControllerWithHotSearches:hotSeaches searchBarPlaceholder:@"搜索商品" didSearchBlock:^(GPSearchViewController *searchViewController, UISearchBar *searchBar, NSString *searchText) {
+    GPSearchVC *searchViewController = [GPSearchVC searchViewControllerWithHotSearches:hotSeaches searchBarPlaceholder:@"搜索商品" didSearchBlock:^(GPSearchVC *searchViewController, UISearchBar *searchBar, NSString *searchText) {
         // 开始搜索执行以下代码
         NSLog(@"-----------------------#4444444444---------------%@",searchText);
 
@@ -87,7 +87,7 @@
 #pragma mark -
 #pragma mark - GPSearchViewControllerDelegate
 //搜索建议
-- (void)searchViewController:(GPSearchViewController *)searchViewController searchTextDidChange:(UISearchBar *)seachBar searchText:(NSString *)searchText
+- (void)searchViewController:(GPSearchVC *)searchViewController searchTextDidChange:(UISearchBar *)seachBar searchText:(NSString *)searchText
 {
     if (searchText.length) { // 与搜索条件再搜索
         // 根据条件发送查询（这里模拟搜索）
@@ -99,30 +99,37 @@
                 [searchSuggestionsM addObject:searchSuggestion];
             }
             // 返回
-            searchViewController.searchSuggestions = searchSuggestionsM;
+            searchViewController.searchAdvice = searchSuggestionsM;
         });
     }
 }
 
 //搜索历史
-- (void)searchViewController:(GPSearchViewController *)searchViewController
+- (void)searchViewController:(GPSearchVC *)searchViewController
 didSelectSearchHistoryAtIndex:(NSInteger)index
                   searchText:(NSString *)searchText{
     
     NSLog(@"-----------------------111111111----------%ld-----%@",index,searchText);
+    
+    [searchViewController.navigationController pushViewController:[SearchResultVC alloc] animated:YES];
+    
 }
 //热门搜索
-- (void)searchViewController:(GPSearchViewController *)searchViewController
+- (void)searchViewController:(GPSearchVC *)searchViewController
    didSelectHotSearchAtIndex:(NSInteger)index
                   searchText:(NSString *)searchText{
     NSLog(@"-----------------------2222222222----------%ld-----%@",index,searchText);
+    
+    [searchViewController.navigationController pushViewController:[SearchResultVC alloc] animated:YES];
+    
 }
 //搜索框搜索
-- (void)searchViewController:(GPSearchViewController *)searchViewController
+- (void)searchViewController:(GPSearchVC *)searchViewController
       didSearchWithSearchBar:(UISearchBar *)searchBar
                   searchText:(NSString *)searchText{
     NSLog(@"-----------------------#3333333333---------------%@",searchText);
     
+    [searchViewController.navigationController pushViewController:[SearchResultVC alloc] animated:YES];
     
 }
 @end

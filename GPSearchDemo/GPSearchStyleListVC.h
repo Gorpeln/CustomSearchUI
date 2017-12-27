@@ -8,6 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-@interface GPSearchVC : UITableViewController
+@interface GPSearchStyleListVC : UITableViewController
 
 @end

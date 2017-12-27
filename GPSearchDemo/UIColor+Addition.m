@@ -1,18 +1,17 @@
 //
-//  UIColor+GPAdditions.m
-//  GPSearchDemo
+//  UIColor+Addition.m
+//  Gorpeln
 //
-//  Created by chen on 16/10/27.
+//  Created by chen on 16/11/1.
 //  Copyright © 2016年 Gorpeln. All rights reserved.
 //
 
-#import "UIColor+GPAdditions.h"
+#import "UIColor+Addition.h"
 
-@implementation UIColor (GPAdditions)
+@implementation UIColor (Addition)
 
-+ (instancetype)gp_colorWithHexString:(NSString *)hexString
-{
-    NSString *colorString = [[hexString stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]] uppercaseString];
++ (UIColor *)colorWithHex:(NSString *)hexColor{
+    NSString *colorString = [[hexColor stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]] uppercaseString];
     
     if (colorString.length < 6) {
         return [UIColor clearColor];
@@ -48,13 +47,9 @@
     [[NSScanner scannerWithString:rString] scanHexInt:&r];
     [[NSScanner scannerWithString:gString] scanHexInt:&g];
     [[NSScanner scannerWithString:bString] scanHexInt:&b];
-
+    
     return [UIColor colorWithRed:(float)r / 255.0 green:(float)g / 255.0 blue:(float)b / 255.0 alpha:1.0];
-}
-
-+ (instancetype)gp_colorWithHexString:(NSString *)hexString alpha:(CGFloat)alpha
-{
-    return [[self gp_colorWithHexString:hexString] colorWithAlphaComponent:alpha];
+	
 }
 
 @end

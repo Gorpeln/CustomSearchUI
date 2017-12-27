@@ -8,8 +8,7 @@
 
 
 #import <UIKit/UIKit.h>
-#import "UIView+GPAdditions.h"
-#import "UIColor+GPAdditions.h"
+#import "Additions.h"
 
 #define GPSEARCH_MARGIN 10
 #define GPSEARCH_BACKGROUND_COLOR GPSEARCH_COLOR(255, 255, 255)

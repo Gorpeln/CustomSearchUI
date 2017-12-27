@@ -7,7 +7,7 @@
 //
 
 #import "AppDelegate.h"
-#import "GPSearchVC.h"
+#import "GPSearchStyleListVC.h"
 @interface AppDelegate ()
 
 @end
@@ -17,7 +17,7 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
 
-    GPSearchVC *vc = [[GPSearchVC alloc] init];
+    GPSearchStyleListVC *vc = [[GPSearchStyleListVC alloc] init];
     UINavigationController *nc = [[UINavigationController alloc] initWithRootViewController:vc];
     self.window.rootViewController = nc;
     

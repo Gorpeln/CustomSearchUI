@@ -1,5 +1,5 @@
 //
-//  GPSearchViewController.h
+//  GPSearchVC.h
 //  GPSearchDemo
 //
 //  Created by chen on 16/10/27.
@@ -9,9 +9,9 @@
 #import <UIKit/UIKit.h>
 #import "GPSearchConst.h"
 
-@class GPSearchViewController, GPSearchSuggestionViewController;
+@class GPSearchVC, GPSearchAdviceVC;
 
-typedef void(^GPDidSearchBlock)(GPSearchViewController *searchViewController, UISearchBar *searchBar, NSString *searchText);
+typedef void(^GPDidSearchBlock)(GPSearchVC *searchViewController, UISearchBar *searchBar, NSString *searchText);
 
 /**
  style of popular search
@@ -49,7 +49,7 @@ typedef NS_ENUM(NSInteger, GPSearchResultShowMode) {
 };
 
 /**
- The protocol of data source, you can custom the suggestion view by implement these methods the data scource.
+ The protocol of data source, you can custom the Advice view by implement these methods the data scource.
  */
 @protocol GPSearchViewControllerDataSource <NSObject>
 
@@ -58,37 +58,37 @@ typedef NS_ENUM(NSInteger, GPSearchResultShowMode) {
 /**
  Return a `UITableViewCell` object.
 
- @param searchSuggestionView    view which display search suggestions
+ @param searchAdviceView    view which display search Advices
  @param indexPath               indexPath of row
  @return a `UITableViewCell` object
  */
-- (UITableViewCell *)searchSuggestionView:(UITableView *)searchSuggestionView cellForRowAtIndexPath:(NSIndexPath *)indexPath;
+- (UITableViewCell *)searchAdviceView:(UITableView *)searchAdviceView cellForRowAtIndexPath:(NSIndexPath *)indexPath;
 
 /**
  Return number of rows in section.
 
- @param searchSuggestionView    view which display search suggestions
+ @param searchAdviceView    view which display search Advices
  @param section                 index of section
  @return number of rows in section
  */
-- (NSInteger)searchSuggestionView:(UITableView *)searchSuggestionView numberOfRowsInSection:(NSInteger)section;
+- (NSInteger)searchAdviceView:(UITableView *)searchAdviceView numberOfRowsInSection:(NSInteger)section;
 
 /**
- Return number of sections in search suggestion view.
+ Return number of sections in search Advice view.
 
- @param searchSuggestionView    view which display search suggestions
+ @param searchAdviceView    view which display search Advices
  @return number of sections
  */
-- (NSInteger)numberOfSectionsInSearchSuggestionView:(UITableView *)searchSuggestionView;
+- (NSInteger)numberOfSectionsInSearchAdviceView:(UITableView *)searchAdviceView;
 
 /**
  Return height for row.
 
- @param searchSuggestionView    view which display search suggestions
+ @param searchAdviceView    view which display search Advices
  @param indexPath               indexPath of row
  @return height of row
  */
-- (CGFloat)searchSuggestionView:(UITableView *)searchSuggestionView heightForRowAtIndexPath:(NSIndexPath *)indexPath;
+- (CGFloat)searchAdviceView:(UITableView *)searchAdviceView heightForRowAtIndexPath:(NSIndexPath *)indexPath;
 
 @end
 
@@ -96,7 +96,7 @@ typedef NS_ENUM(NSInteger, GPSearchResultShowMode) {
 /**
  The protocol of delegate
  */
-@protocol GPSearchViewControllerDelegate <NSObject, UITableViewDelegate>
+@protocol GPSearchVCDelegate <NSObject, UITableViewDelegate>
 
 @optional
 
@@ -107,7 +107,7 @@ typedef NS_ENUM(NSInteger, GPSearchResultShowMode) {
  @param searchBar               search bar
  @param searchText              text for search
  */
-- (void)searchViewController:(GPSearchViewController *)searchViewController
+- (void)searchViewController:(GPSearchVC *)searchViewController
       didSearchWithSearchBar:(UISearchBar *)searchBar
                   searchText:(NSString *)searchText;
 
@@ -120,7 +120,7 @@ typedef NS_ENUM(NSInteger, GPSearchResultShowMode) {
  
  Note: `searchViewController:didSearchWithSearchBar:searchText:` will not be called when this method is implemented.
  */
-- (void)searchViewController:(GPSearchViewController *)searchViewController
+- (void)searchViewController:(GPSearchVC *)searchViewController
    didSelectHotSearchAtIndex:(NSInteger)index
                   searchText:(NSString *)searchText;
 
@@ -133,12 +133,12 @@ typedef NS_ENUM(NSInteger, GPSearchResultShowMode) {
  
  Note: `searchViewController:didSearchWithSearchBar:searchText:` will not be called when this method is implemented.
  */
-- (void)searchViewController:(GPSearchViewController *)searchViewController
+- (void)searchViewController:(GPSearchVC *)searchViewController
 didSelectSearchHistoryAtIndex:(NSInteger)index
                   searchText:(NSString *)searchText;
 
 /**
- Called when search suggestion is selected.
+ Called when search Advice is selected.
 
  @param searchViewController    search view controller
  @param index                   index of row
@@ -146,31 +146,31 @@ didSelectSearchHistoryAtIndex:(NSInteger)index
 
  Note: `searchViewController:didSearchWithSearchBar:searchText:` will not be called when this method is implemented.
  */
-- (void)searchViewController:(GPSearchViewController *)searchViewController
-didSelectSearchSuggestionAtIndex:(NSInteger)index
-                  searchText:(NSString *)searchText GPSEARCH_DEPRECATED("Use searchViewController:didSelectSearchSuggestionAtIndexPath:searchText:");
+- (void)searchViewController:(GPSearchVC *)searchViewController
+didSelectSearchAdviceAtIndex:(NSInteger)index
+                  searchText:(NSString *)searchText GPSEARCH_DEPRECATED("Use searchViewController:didSelectSearchAdviceAtIndexPath:searchText:");
 
 /**
- Called when search suggestion is selected, the method support more custom of search suggestion view.
+ Called when search Advice is selected, the method support more custom of search Advice view.
 
  @param searchViewController    search view controller
  @param indexPath               indexPath of row
  @param searchBar               search bar
  
- Note: `searchViewController:didSearchWithSearchBar:searchText:` and `searchViewController:didSelectSearchSuggestionAtIndex:searchText:` will not be called when this method is implemented.
- Suggestion: To ensure that can cache selected custom search suggestion records, you need to set `searchBar.text` = "custom search text".
+ Note: `searchViewController:didSearchWithSearchBar:searchText:` and `searchViewController:didSelectSearchAdviceAtIndex:searchText:` will not be called when this method is implemented.
+ Advice: To ensure that can cache selected custom search Advice records, you need to set `searchBar.text` = "custom search text".
  */
-- (void)searchViewController:(GPSearchViewController *)searchViewController didSelectSearchSuggestionAtIndexPath:(NSIndexPath *)indexPath
+- (void)searchViewController:(GPSearchVC *)searchViewController didSelectSearchAdviceAtIndexPath:(NSIndexPath *)indexPath
                    searchBar:(UISearchBar *)searchBar;
 
 /**
- Called when search text did change, you can reload data of suggestion view thought this method.
+ Called when search text did change, you can reload data of Advice view thought this method.
 
  @param searchViewController    search view controller
  @param searchBar               search bar
  @param searchText              text for search
  */
-- (void)searchViewController:(GPSearchViewController *)searchViewController
+- (void)searchViewController:(GPSearchVC *)searchViewController
          searchTextDidChange:(UISearchBar *)searchBar
                   searchText:(NSString *)searchText;
 
@@ -179,16 +179,16 @@ didSelectSearchSuggestionAtIndex:(NSInteger)index
 
  @param searchViewController search view controller
  */
-- (void)didClickCancel:(GPSearchViewController *)searchViewController;
+- (void)didClickCancel:(GPSearchVC *)searchViewController;
 
 @end
 
-@interface GPSearchViewController : UIViewController
+@interface GPSearchVC : UIViewController
 
 /**
  The delegate
  */
-@property (nonatomic, weak) id<GPSearchViewControllerDelegate> delegate;
+@property (nonatomic, weak) id<GPSearchVCDelegate> delegate;
 
 /**
  The data source
@@ -320,9 +320,9 @@ didSelectSearchSuggestionAtIndex:(NSInteger)index
 @property (nonatomic, weak) UIBarButtonItem *cancelButton;
 
 /**
- The search suggestion view
+ The search Advice view
  */
-@property (nonatomic, weak, readonly) UITableView *searchSuggestionView;
+@property (nonatomic, weak, readonly) UITableView *searchAdviceView;
 
 /**
  The block which invoked when search begain.
@@ -330,16 +330,16 @@ didSelectSearchSuggestionAtIndex:(NSInteger)index
 @property (nonatomic, copy) GPDidSearchBlock didSearchBlock;
 
 /**
- The element of search suggestions
+ The element of search Advices
  
- Note: it is't effective when `searchSuggestionHidden` is NO or cell of suggestion view is custom.
+ Note: it is't effective when `searchAdviceHidden` is NO or cell of Advice view is custom.
  */
-@property (nonatomic, copy) NSArray<NSString *> *searchSuggestions;
+@property (nonatomic, copy) NSArray<NSString *> *searchAdvice;
 
 /**
  Whether hidden search suggstion view, default is NO.
  */
-@property (nonatomic, assign) BOOL searchSuggestionHidden;
+@property (nonatomic, assign) BOOL searchAdviceHidden;
 
 /**
  The view controller of search result.
