@@ -25,6 +25,8 @@
 		74CD57C11FFCB2700019E4A2 /* SuperViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 74CD57BF1FFCB2700019E4A2 /* SuperViewController.m */; };
 		74CD57C41FFCB3220019E4A2 /* m_backArrow@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 74CD57C21FFCB3220019E4A2 /* m_backArrow@3x.png */; };
 		74CD57C51FFCB3220019E4A2 /* m_backArrow@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 74CD57C31FFCB3220019E4A2 /* m_backArrow@2x.png */; };
+		74CD57DB1FFCD44C0019E4A2 /* My_LaunchScreen.png in Resources */ = {isa = PBXBuildFile; fileRef = 74CD57D91FFCD44B0019E4A2 /* My_LaunchScreen.png */; };
+		74CD57DC1FFCD44C0019E4A2 /* icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 74CD57DA1FFCD44C0019E4A2 /* icon.png */; };
 		74D95FD61FF3A15A00AE05D2 /* UIView+Addition.m in Sources */ = {isa = PBXBuildFile; fileRef = 74D95FD11FF3A15900AE05D2 /* UIView+Addition.m */; };
 		74D95FD71FF3A15A00AE05D2 /* UIColor+Addition.m in Sources */ = {isa = PBXBuildFile; fileRef = 74D95FD21FF3A15900AE05D2 /* UIColor+Addition.m */; };
 		74F62F521FF4C4AF00B0ECC2 /* GPSearch.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 74F62F511FF4C4AF00B0ECC2 /* GPSearch.bundle */; };
@@ -87,6 +89,8 @@
 		74CD57C01FFCB2700019E4A2 /* SuperViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SuperViewController.h; sourceTree = "<group>"; };
 		74CD57C21FFCB3220019E4A2 /* m_backArrow@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "m_backArrow@3x.png"; sourceTree = "<group>"; };
 		74CD57C31FFCB3220019E4A2 /* m_backArrow@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "m_backArrow@2x.png"; sourceTree = "<group>"; };
+		74CD57D91FFCD44B0019E4A2 /* My_LaunchScreen.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = My_LaunchScreen.png; sourceTree = "<group>"; };
+		74CD57DA1FFCD44C0019E4A2 /* icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon.png; sourceTree = "<group>"; };
 		74D95FD11FF3A15900AE05D2 /* UIView+Addition.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+Addition.m"; sourceTree = "<group>"; };
 		74D95FD21FF3A15900AE05D2 /* UIColor+Addition.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIColor+Addition.m"; sourceTree = "<group>"; };
 		74D95FD31FF3A15900AE05D2 /* UIView+Addition.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+Addition.h"; sourceTree = "<group>"; };
@@ -195,6 +199,8 @@
 				7410490B1DC202E7006A4D6E /* AppDelegate.m */,
 				7410490D1DC202E7006A4D6E /* ViewController.h */,
 				7410490E1DC202E7006A4D6E /* ViewController.m */,
+				74CD57DA1FFCD44C0019E4A2 /* icon.png */,
+				74CD57D91FFCD44B0019E4A2 /* My_LaunchScreen.png */,
 				741049101DC202E7006A4D6E /* Main.storyboard */,
 				741049DC1DC21F4A006A4D6E /* LaunchScreen.storyboard */,
 				741049131DC202E7006A4D6E /* Assets.xcassets */,
@@ -344,10 +350,12 @@
 			files = (
 				741231F91FF4F72E007A4102 /* Localizable.strings in Resources */,
 				741049DE1DC21F4A006A4D6E /* LaunchScreen.storyboard in Resources */,
+				74CD57DC1FFCD44C0019E4A2 /* icon.png in Resources */,
 				74CD57C51FFCB3220019E4A2 /* m_backArrow@2x.png in Resources */,
 				74CD57C41FFCB3220019E4A2 /* m_backArrow@3x.png in Resources */,
 				74F62F521FF4C4AF00B0ECC2 /* GPSearch.bundle in Resources */,
 				741049141DC202E7006A4D6E /* Assets.xcassets in Resources */,
+				74CD57DB1FFCD44C0019E4A2 /* My_LaunchScreen.png in Resources */,
 				741049121DC202E7006A4D6E /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

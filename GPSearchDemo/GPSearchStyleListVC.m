@@ -22,7 +22,16 @@
    
     // set title
     self.title = @"GPSearch Example";
+    self.edgesForExtendedLayout = UIRectEdgeNone;
+
     self.tableView = [[UITableView alloc] initWithFrame:self.view.bounds style:UITableViewStyleGrouped];
+    
+    if (@available(iOS 11.0, *)) {
+        self.tableView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
+    } else {
+        // Fallback on earlier versions
+    }
+    
     if ([self.tableView respondsToSelector:@selector(setCellLayoutMarginsFollowReadableWidth:)]) { // Adjust for iPad
         if (@available(iOS 9.0, *)) {
             self.tableView.cellLayoutMarginsFollowReadableWidth = NO;

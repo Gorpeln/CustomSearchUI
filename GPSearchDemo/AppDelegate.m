@@ -19,6 +19,8 @@
 
     GPSearchStyleListVC *vc = [[GPSearchStyleListVC alloc] init];
     UINavigationController *nc = [[UINavigationController alloc] initWithRootViewController:vc];
+    UINavigationBar *navBar = [UINavigationBar appearance];
+    navBar.barTintColor = [UIColor whiteColor];
     self.window.rootViewController = nc;
     
     return YES;
