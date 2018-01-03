@@ -9,25 +9,27 @@
 
 #import <UIKit/UIKit.h>
 
-typedef void(^GPSearchAdviceDidSelectCellBlock)(UITableViewCell *selectedCell);
+typedef void(^GPSearchSuggestionDidSelectCellBlock)(UITableViewCell *selectedCell);
 
-@protocol GPSearchAdviceViewDataSource <NSObject, UITableViewDataSource>
+@protocol GPSearchSuggestionViewDataSource <NSObject, UITableViewDataSource>
 
 @required
-- (UITableViewCell *)searchAdviceView:(UITableView *)searchAdviceView cellForRowAtIndexPath:(NSIndexPath *)indexPath;
-- (NSInteger)searchAdviceView:(UITableView *)searchAdviceView numberOfRowsInSection:(NSInteger)section;
+- (UITableViewCell *)searchSuggestionView:(UITableView *)searchSuggestionView cellForRowAtIndexPath:(NSIndexPath *)indexPath;
+- (NSInteger)searchSuggestionView:(UITableView *)searchSuggestionView numberOfRowsInSection:(NSInteger)section;
 @optional
-- (NSInteger)numberOfSectionsInSearchAdviceView:(UITableView *)searchAdviceView;
-- (CGFloat)searchAdviceView:(UITableView *)searchAdviceView heightForRowAtIndexPath:(NSIndexPath *)indexPath;
+- (NSInteger)numberOfSectionsInSearchSuggestionView:(UITableView *)searchSuggestionView;
+- (CGFloat)searchSuggestionView:(UITableView *)searchSuggestionView heightForRowAtIndexPath:(NSIndexPath *)indexPath;
 
 @end
 
 @interface GPSearchAdviceVC : UITableViewController
 
-@property (nonatomic, weak) id<GPSearchAdviceViewDataSource> dataSource;
-@property (nonatomic, copy) NSArray<NSString *> *searchAdvice;
-@property (nonatomic, copy) GPSearchAdviceDidSelectCellBlock didSelectCellBlock;
+@property (nonatomic, weak) id<GPSearchSuggestionViewDataSource> dataSource;
+@property (nonatomic, copy) NSArray<NSString *> *searchSuggestions;
+@property (nonatomic, copy) GPSearchSuggestionDidSelectCellBlock didSelectCellBlock;
 
-+ (instancetype)searchAdviceViewControllerWithDidSelectCellBlock:(GPSearchAdviceDidSelectCellBlock)didSelectCellBlock;
++ (instancetype)searchSuggestionViewControllerWithDidSelectCellBlock:(GPSearchSuggestionDidSelectCellBlock)didSelectCellBlock;
 
 @end
+
+

@@ -1,0 +1,11 @@
+/* 
+  Localizable.strings
+  GPSearchDemo
+
+  Created by chen on 16/10/27.
+  Copyright © 2016年 Gorpeln. All rights reserved.
+*/
+
+"GPExampleSearchPlaceholderText" = "Rechercher un langage de programmation";
+"GPExampleTableSectionZeroTitle" = "Choisissez le style de Historique de la Recherche";
+"GPExampleTableSectionOneTitle" = "Choisissez le style de Recherches Populaires";

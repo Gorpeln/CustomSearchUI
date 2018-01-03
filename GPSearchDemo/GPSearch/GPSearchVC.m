@@ -1,3 +1,4 @@
+
 //
 //  GPSearchVC.m
 //  GPSearchDemo
@@ -14,7 +15,7 @@
 #define GPTextColor GPSEARCH_COLOR(113, 113, 113)
 #define GPSEARCH_COLORPolRandomColor self.colorPol[arc4random_uniform((uint32_t)self.colorPol.count)]
 
-@interface GPSearchVC () <UISearchBarDelegate, UITableViewDelegate, UITableViewDataSource, GPSearchAdviceViewDataSource,UIGestureRecognizerDelegate>
+@interface GPSearchVC () <UISearchBarDelegate, UITableViewDelegate, UITableViewDataSource, GPSearchSuggestionViewDataSource,UIGestureRecognizerDelegate>
 
 /**
  The header view of search view
@@ -47,9 +48,9 @@
 @property (nonatomic, assign) CGFloat keyboardHeight;
 
 /**
- The search Advice view contoller
+ The search suggestion view contoller
  */
-@property (nonatomic, weak) GPSearchAdviceVC *searchAdviceVC;
+@property (nonatomic, weak) GPSearchAdviceVC *searchSuggestionVC;
 
 /**
  The content view of popular search tags
@@ -82,38 +83,23 @@
 @property (nonatomic, strong) UITableView *baseSearchTableView;
 
 /**
- Whether did press Advice cell
+ Whether did press suggestion cell
  */
-@property (nonatomic, assign) BOOL didClickAdviceCell;
+@property (nonatomic, assign) BOOL didClickSuggestionCell;
 
 /**
  The current orientation of device
  */
 @property (nonatomic, assign) UIDeviceOrientation currentOrientation;
 
+/**
+ The width of cancel button
+ */
+@property (nonatomic, assign) CGFloat cancelButtonWidth;
+
 @end
 
 @implementation GPSearchVC
-
-- (void)viewDidLoad {
-    [super viewDidLoad];
-    [self addSlideRightToBack];
-
-}
-#pragma mark - slideRightToBack
--(void)addSlideRightToBack{
-    
-    id target = self.navigationController.interactivePopGestureRecognizer.delegate;
-    UIPanGestureRecognizer *pan = [[UIPanGestureRecognizer alloc] initWithTarget:target action:@selector(handleNavigationTransition:)];
-    pan.delegate = self;
-    [self.view addGestureRecognizer:pan];
-    self.navigationController.interactivePopGestureRecognizer.enabled = NO;
-    
-}
-
--(void)handleNavigationTransition:(UIPanGestureRecognizer *)gestureRecognizer{
-    [self.navigationController popViewControllerAnimated:YES];
-}
 
 - (instancetype)init
 {
@@ -133,7 +119,7 @@
 - (void)viewDidLayoutSubviews
 {
     [super viewDidLayoutSubviews];
-
+    
     if (self.currentOrientation != [[UIDevice currentDevice] orientation]) { // orientation changed, reload layout
         self.hotSearches = self.hotSearches;
         self.searchHistories = self.searchHistories;
@@ -141,19 +127,20 @@
     }
     
     UIButton *cancelButton = self.navigationItem.rightBarButtonItem.customView;
+    self.cancelButtonWidth = cancelButton.width > self.cancelButtonWidth ? cancelButton.width : self.cancelButtonWidth;
     [cancelButton sizeToFit];
-    cancelButton.width += 5;
+    cancelButton.width += GPSEARCH_MARGIN *2;
+    
     // Adapt the search bar layout problem in the navigation bar on iOS 11
-    // More details : https://github.com/iphone5solo/GPSearch/issues/108
     if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 11.0) { // iOS 11
-        _searchBar.width = self.view.width - cancelButton.width - GPSEARCH_MARGIN * 3 - 8;
+        _searchBar.width = self.view.width - self.cancelButtonWidth - GPSEARCH_MARGIN * 3 - GPSEARCH_MARGIN;
         _searchBar.height = self.view.width > self.view.height ? 24 : 30;
         _searchTextField.frame = _searchBar.bounds;
     } else {
         UIView *titleView = self.navigationItem.titleView;
         titleView.left = GPSEARCH_MARGIN * 1.5;
         titleView.top = self.view.width > self.view.height ? 3 : 7;
-        titleView.width = self.view.width - cancelButton.width - titleView.left * 2 - 3;
+        titleView.width = self.view.width - self.cancelButtonWidth - titleView.left * 2 - 3;
         titleView.height = self.view.width > self.view.height ? 24 : 30;
     }
 }
@@ -168,16 +155,78 @@
     [super viewDidAppear:animated];
     
     [self.searchBar becomeFirstResponder];
+    
+}
+
+- (void)viewDidLoad {
+    [super viewDidLoad];
+
+
+}
+
+#pragma mark - slideRightToBack
+-(void)addSlideRightToBack{
+    
+    id target = self.navigationController.interactivePopGestureRecognizer.delegate;
+    UIPanGestureRecognizer *pan = [[UIPanGestureRecognizer alloc] initWithTarget:target action:@selector(handleNavigationTransition:)];
+    pan.delegate = self;
+    [self.view addGestureRecognizer:pan];
+    self.navigationController.interactivePopGestureRecognizer.enabled = NO;
+    
+}
+
+-(void)handleNavigationTransition:(UIPanGestureRecognizer *)gestureRecognizer{
+}
+
+- (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer{
+    if ([gestureRecognizer isKindOfClass:[UIPanGestureRecognizer class]]) {
+        
+        if (self && [[self.view gestureRecognizers] containsObject:gestureRecognizer]) {
+            CGPoint tPoint = [(UIPanGestureRecognizer *)gestureRecognizer translationInView:gestureRecognizer.view];
+            if (tPoint.x >= 0) {
+                CGFloat y = fabs(tPoint.y);
+                CGFloat x = fabs(tPoint.x);
+                CGFloat af = 30.0f/180.0f * M_PI;
+                
+                CGFloat tf = tanf(af);
+                if ((y/x) <= tf) {
+                    return YES;
+                }
+                return NO;
+            }else{
+                return NO;
+            }
+        }
+        
+    }
+    
+    return YES;
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
     
+    if ([[[UIDevice currentDevice] systemVersion] floatValue] < 11.0) { // iOS 11
+    UIButton* lBarBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+    lBarBtn.frame = CGRectMake(0, 0, 0, 0);
+    lBarBtn.backgroundColor = [UIColor clearColor];
+    lBarBtn.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
+    UIBarButtonItem* lBarBtnItem = [[UIBarButtonItem alloc] initWithCustomView:lBarBtn];
+    self.navigationItem.leftBarButtonItem = lBarBtnItem;
+    [self addSlideRightToBack];
+    }
+    
+    if (self.cancelButtonWidth == 0) { // Just adapt iOS 11.2
+        [self viewDidLayoutSubviews];
+    }
+    
+    [self.searchBar becomeFirstResponder];
+    
     // Adjust the view according to the `navigationBar.translucent`
     if (NO == self.navigationController.navigationBar.translucent) {
         self.baseSearchTableView.contentInset = UIEdgeInsetsMake(0, 0, self.view.top, 0);
-        self.searchAdviceVC.view.frame = CGRectMake(0, CGRectGetMaxY(self.navigationController.navigationBar.frame) - self.view.top, self.view.width, self.view.height + self.view.top);
+        self.searchSuggestionVC.view.frame = CGRectMake(0, CGRectGetMaxY(self.navigationController.navigationBar.frame) - self.view.top, self.view.width, self.view.height + self.view.top);
         if (!self.navigationController.navigationBar.barTintColor) {
             self.navigationController.navigationBar.barTintColor = GPSEARCH_COLOR(249, 249, 249);
         }
@@ -198,7 +247,7 @@
 
 + (instancetype)searchViewControllerWithHotSearches:(NSArray<NSString *> *)hotSearches searchBarPlaceholder:(NSString *)placeholder
 {
-    GPSearchVC *searchVC = [[GPSearchVC alloc] init];
+    GPSearchVC *searchVC = [[self alloc] init];
     searchVC.hotSearches = hotSearches;
     searchVC.searchBar.placeholder = placeholder;
     return searchVC;
@@ -229,39 +278,39 @@
     return _baseSearchTableView;
 }
 
-- (GPSearchAdviceVC *)searchAdviceVC
+- (GPSearchAdviceVC *)searchSuggestionVC
 {
-    if (!_searchAdviceVC) {
-        GPSearchAdviceVC *searchAdviceVC = [[GPSearchAdviceVC alloc] initWithStyle:UITableViewStyleGrouped];
+    if (!_searchSuggestionVC) {
+        GPSearchAdviceVC *searchSuggestionVC = [[GPSearchAdviceVC alloc] initWithStyle:UITableViewStyleGrouped];
         __weak typeof(self) _weakSelf = self;
-        searchAdviceVC.didSelectCellBlock = ^(UITableViewCell *didSelectCell) {
+        searchSuggestionVC.didSelectCellBlock = ^(UITableViewCell *didSelectCell) {
             __strong typeof(_weakSelf) _swSelf = _weakSelf;
             _swSelf.searchBar.text = didSelectCell.textLabel.text;
-            NSIndexPath *indexPath = [_swSelf.searchAdviceVC.tableView indexPathForCell:didSelectCell];
+            NSIndexPath *indexPath = [_swSelf.searchSuggestionVC.tableView indexPathForCell:didSelectCell];
             
-            if ([_swSelf.delegate respondsToSelector:@selector(searchViewController:didSelectSearchAdviceAtIndexPath:searchBar:)]) {
-                [_swSelf.delegate searchViewController:_swSelf didSelectSearchAdviceAtIndexPath:indexPath searchBar:_swSelf.searchBar];
+            if ([_swSelf.delegate respondsToSelector:@selector(searchViewController:didSelectSearchSuggestionAtIndexPath:searchBar:)]) {
+                [_swSelf.delegate searchViewController:_swSelf didSelectSearchSuggestionAtIndexPath:indexPath searchBar:_swSelf.searchBar];
                 [_swSelf saveSearchCacheAndRefreshView];
-            } else if ([_swSelf.delegate respondsToSelector:@selector(searchViewController:didSelectSearchAdviceAtIndex:searchText:)]) {
+            } else if ([_swSelf.delegate respondsToSelector:@selector(searchViewController:didSelectSearchSuggestionAtIndex:searchText:)]) {
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
-                [_swSelf.delegate searchViewController:_swSelf didSelectSearchAdviceAtIndex:indexPath.row searchText:_swSelf.searchBar.text];
+                [_swSelf.delegate searchViewController:_swSelf didSelectSearchSuggestionAtIndex:indexPath.row searchText:_swSelf.searchBar.text];
 #pragma clang diagnostic pop
                 [_swSelf saveSearchCacheAndRefreshView];
             } else {
                 [_swSelf searchBarSearchButtonClicked:_swSelf.searchBar];
             }
         };
-        searchAdviceVC.view.frame = CGRectMake(0, CGRectGetMaxY(self.navigationController.navigationBar.frame), GPScreenW, GPScreenH);
-        searchAdviceVC.view.backgroundColor = self.baseSearchTableView.backgroundColor;
-        searchAdviceVC.view.hidden = YES;
-        _searchAdviceView = (UITableView *)searchAdviceVC.view;
-        searchAdviceVC.dataSource = self;
-        [self.view addSubview:searchAdviceVC.view];
-        [self addChildViewController:searchAdviceVC];
-        _searchAdviceVC = searchAdviceVC;
+        searchSuggestionVC.view.frame = CGRectMake(0, CGRectGetMaxY(self.navigationController.navigationBar.frame), GPScreenW, GPScreenH);
+        searchSuggestionVC.view.backgroundColor = self.baseSearchTableView.backgroundColor;
+        searchSuggestionVC.view.hidden = YES;
+        _searchSuggestionView = (UITableView *)searchSuggestionVC.view;
+        searchSuggestionVC.dataSource = self;
+        [self.view addSubview:searchSuggestionVC.view];
+        [self addChildViewController:searchSuggestionVC];
+        _searchSuggestionVC = searchSuggestionVC;
     }
-    return _searchAdviceVC;
+    return _searchSuggestionVC;
 }
 
 - (UIButton *)emptyButton
@@ -270,8 +319,8 @@
         UIButton *emptyButton = [[UIButton alloc] init];
         emptyButton.titleLabel.font = self.searchHistoryHeader.font;
         [emptyButton setTitleColor:GPTextColor forState:UIControlStateNormal];
-        [emptyButton setTitle:GPSearchEmptyButtonText forState:UIControlStateNormal];
-        [emptyButton setImage:[UIImage imageNamed:@"empty"] forState:UIControlStateNormal];
+        [emptyButton setTitle:[NSBundle gp_localizedStringForKey:GPSearchEmptyButtonText] forState:UIControlStateNormal];
+        [emptyButton setImage:[NSBundle gp_imageNamed:@"empty"] forState:UIControlStateNormal];
         [emptyButton addTarget:self action:@selector(emptySearchHistoryDidClick) forControlEvents:UIControlEventTouchUpInside];
         [emptyButton sizeToFit];
         emptyButton.width += GPSEARCH_MARGIN;
@@ -301,10 +350,9 @@
 - (UILabel *)searchHistoryHeader
 {
     if (!_searchHistoryHeader) {
-        UILabel *HistoryTitleLabel = [self setupTitleLabel:GPSearchSearchHistoryText];
-        _searchHistoryHeader = HistoryTitleLabel;
-        [self.searchHistoryView addSubview:HistoryTitleLabel];
-
+        UILabel *titleLabel = [self setupTitleLabel:[NSBundle gp_localizedStringForKey:GPSearchSearchHistoryText]];
+        [self.searchHistoryView addSubview:titleLabel];
+        _searchHistoryHeader = titleLabel;
     }
     return _searchHistoryHeader;
 }
@@ -350,11 +398,8 @@
     return self.navigationItem.rightBarButtonItem;
 }
 
+- (void)setup{
 
-- (void)setup
-{
-
- 
     self.view.backgroundColor = [UIColor whiteColor];
     self.baseSearchTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     self.navigationController.navigationBar.backIndicatorImage = nil;
@@ -362,17 +407,19 @@
     UIButton *cancleButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [cancleButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
     cancleButton.titleLabel.font = [UIFont fontWithName:@"Heiti SC" size:15.0];
-    [cancleButton setTitle:GPSearchCancelButtonText forState:UIControlStateNormal];
+    [cancleButton setTitle:[NSBundle gp_localizedStringForKey:GPSearchCancelButtonText] forState:UIControlStateNormal];
     [cancleButton addTarget:self action:@selector(cancelDidClick)  forControlEvents:UIControlEventTouchUpInside];
     [cancleButton sizeToFit];
+    cancleButton.width += GPSEARCH_MARGIN *2;
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:cancleButton];
+    
     /**
      * Initialize settings
      */
     self.hotSearchStyle = GPHotSearchStyleDefault;
     self.searchHistoryStyle = GPHotSearchStyleDefault;
     self.searchResultShowMode = GPSearchResultShowModeDefault;
-    self.searchAdviceHidden = NO;
+    self.searchSuggestionHidden = NO;
     self.searchHistoriesCachePath = GPSEARCH_SEARCH_HISTORY_CACHE_PATH;
     self.searchHistoriesCount = 20;
     self.showSearchHistory = YES;
@@ -395,9 +442,14 @@
         searchBar.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     }
     self.navigationItem.titleView = titleView;
-    searchBar.placeholder = @"搜索商品";
-    searchBar.backgroundImage = [UIImage imageNamed:@"clearImage"];
+    searchBar.placeholder = [NSBundle gp_localizedStringForKey:GPSearchSearchPlaceholderText];
+    searchBar.backgroundImage = [NSBundle gp_imageNamed:@"clearImage"];
     searchBar.delegate = self;
+    searchBar.layer.borderWidth = 0.5;
+    searchBar.layer.borderColor = [UIColor lightGrayColor].CGColor;
+    searchBar.clipsToBounds = YES;
+    searchBar.layer.cornerRadius = 4.0;
+    
     for (UIView *subView in [[searchBar.subviews lastObject] subviews]) {
         if ([[subView class] isSubclassOfClass:[UITextField class]]) {
             UITextField *textField = (UITextField *)subView;
@@ -415,9 +467,8 @@
     hotSearchView.left = GPSEARCH_MARGIN * 1.5;
     hotSearchView.width = headerView.width - hotSearchView.left * 2;
     hotSearchView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
-    UILabel *titleLabel = [self setupTitleLabel:GPSearchHotSearchText];
+    UILabel *titleLabel = [self setupTitleLabel:[NSBundle gp_localizedStringForKey:GPSearchHotSearchText]];
     self.hotSearchHeader = titleLabel;
-    self.hotSearchHeader.top = -GPSEARCH_MARGIN * 1.5;
     [hotSearchView addSubview:titleLabel];
     UIView *hotSearchTagsContentView = [[UIView alloc] init];
     hotSearchTagsContentView.width = hotSearchView.width;
@@ -436,7 +487,7 @@
     emptySearchHistoryLabel.textColor = [UIColor darkGrayColor];
     emptySearchHistoryLabel.font = [UIFont systemFontOfSize:13];
     emptySearchHistoryLabel.userInteractionEnabled = YES;
-    emptySearchHistoryLabel.text = GPSearchEmptySearchHistoryText;
+    emptySearchHistoryLabel.text = [NSBundle gp_localizedStringForKey:GPSearchEmptySearchHistoryText];
     emptySearchHistoryLabel.textAlignment = NSTextAlignmentCenter;
     emptySearchHistoryLabel.height = 49;
     [emptySearchHistoryLabel addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(emptySearchHistoryDidClick)]];
@@ -452,11 +503,12 @@
 
 - (UILabel *)setupTitleLabel:(NSString *)title
 {
-    UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake( 15, 0, GPSEARCH_REALY_SCREEN_WIDTH - 30, 30)];
+    UILabel *titleLabel = [[UILabel alloc] init];
     titleLabel.text = title;
-    titleLabel.font = [UIFont systemFontOfSize:13.0];
+    titleLabel.font = [UIFont systemFontOfSize:13];
     titleLabel.tag = 1;
-    titleLabel.textColor = [UIColor blackColor];
+    titleLabel.textColor = GPTextColor;
+    [titleLabel sizeToFit];
     titleLabel.left = 0;
     titleLabel.top = 0;
     return titleLabel;
@@ -472,7 +524,7 @@
     self.baseSearchTableView.backgroundColor = [UIColor colorWithHex:@"#efefef"];
     // remove all subviews in hotSearchTagsContentView
     [self.hotSearchTagsContentView.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
-  
+    
     CGFloat rectangleTagH = 40;
     for (int i = 0; i < self.hotSearches.count; i++) {
         UILabel *rectangleTagLabel = [[UILabel alloc] init];
@@ -495,7 +547,7 @@
     self.baseSearchTableView.tableHeaderView.height = self.headerView.height = MAX(CGRectGetMaxY(self.hotSearchView.frame), CGRectGetMaxY(self.searchHistoryView.frame));
     
     for (int i = 0; i < GPRectangleTagMaxCol - 1; i++) {
-        UIImageView *verticalLine = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"cell-content-line-vertical"]];
+        UIImageView *verticalLine = [[UIImageView alloc] initWithImage:[NSBundle gp_imageNamed:@"cell-content-line-vertical"]];
         verticalLine.height = contentView.height;
         verticalLine.alpha = 0.7;
         verticalLine.left = contentView.width / GPRectangleTagMaxCol * (i + 1);
@@ -504,7 +556,7 @@
     }
     
     for (int i = 0; i < ceil(((double)self.hotSearches.count / GPRectangleTagMaxCol)) - 1; i++) {
-        UIImageView *verticalLine = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"cell-content-line"]];
+        UIImageView *verticalLine = [[UIImageView alloc] initWithImage:[NSBundle gp_imageNamed:@"cell-content-line"]];
         verticalLine.height = 0.5;
         verticalLine.alpha = 0.7;
         verticalLine.top = rectangleTagH * (i + 1);
@@ -512,7 +564,7 @@
         [contentView addSubview:verticalLine];
     }
     [self layoutForDemand];
-    // Note：When the operating system for the iOS 9.left series tableHeaderView height settings are invalid, you need to reset the tableHeaderView
+    // Note：When the operating system for the iOS 9.x series tableHeaderView height settings are invalid, you need to reset the tableHeaderView
     [self.baseSearchTableView setTableHeaderView:self.baseSearchTableView.tableHeaderView];
 }
 
@@ -558,7 +610,7 @@
         [rankTextLabelsM addObject:rankTextLabel];
         [rankView addSubview:rankTextLabel];
         
-        UIImageView *line = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"cell-content-line"]];
+        UIImageView *line = [[UIImageView alloc] initWithImage:[NSBundle gp_imageNamed:@"cell-content-line"]];
         line.height = 0.5;
         line.alpha = 0.7;
         line.left = -GPScreenW * 0.5;
@@ -603,7 +655,7 @@
     self.baseSearchTableView.tableHeaderView.height = self.headerView.height = MAX(CGRectGetMaxY(self.hotSearchView.frame), CGRectGetMaxY(self.searchHistoryView.frame));
     [self layoutForDemand];
     
-    // Note：When the operating system for the iOS 9.left series tableHeaderView height settings are invalid, you need to reset the tableHeaderView
+    // Note：When the operating system for the iOS 9.x series tableHeaderView height settings are invalid, you need to reset the tableHeaderView
     [self.baseSearchTableView setTableHeaderView:self.baseSearchTableView.tableHeaderView];
 }
 
@@ -665,7 +717,7 @@
     self.baseSearchTableView.tableHeaderView.height = self.headerView.height = MAX(CGRectGetMaxY(self.hotSearchView.frame), CGRectGetMaxY(self.searchHistoryView.frame));
     self.baseSearchTableView.tableHeaderView.hidden = NO;
     
-    // Note：When the operating system for the iOS 9.left series tableHeaderView height settings are invalid, you need to reset the tableHeaderView
+    // Note：When the operating system for the iOS 9.x series tableHeaderView height settings are invalid, you need to reset the tableHeaderView
     [self.baseSearchTableView setTableHeaderView:self.baseSearchTableView.tableHeaderView];
     return [tagsM copy];
 }
@@ -712,7 +764,7 @@
     _showSearchResultWhenSearchTextChanged = showSearchResultWhenSearchTextChanged;
     
     if (YES == _showSearchResultWhenSearchTextChanged) {
-        self.searchAdviceHidden = YES;
+        self.searchSuggestionHidden = YES;
     }
 }
 
@@ -764,19 +816,19 @@
     _searchTextField.backgroundColor = searchBarBackgroundColor;
 }
 
-- (void)setsearchAdvice:(NSArray<NSString *> *)searchAdvice
+- (void)setSearchSuggestions:(NSArray<NSString *> *)searchSuggestions
 {
-    if ([self.dataSource respondsToSelector:@selector(searchAdviceView:cellForRowAtIndexPath:)]) {
-        // set searchAdvice is nil when cell of Advice view is custom.
-        _searchAdvice = nil;
+    if ([self.dataSource respondsToSelector:@selector(searchSuggestionView:cellForRowAtIndexPath:)]) {
+        // set searchSuggestion is nil when cell of suggestion view is custom.
+        _searchSuggestions = nil;
         return;
     }
     
-    _searchAdvice = [searchAdvice copy];
-    self.searchAdviceVC.searchAdvice = [searchAdvice copy];
+    _searchSuggestions = [searchSuggestions copy];
+    self.searchSuggestionVC.searchSuggestions = [searchSuggestions copy];
     
-    self.baseSearchTableView.hidden = !self.searchAdviceHidden && [self.searchAdviceVC.tableView numberOfRowsInSection:0];
-    self.searchAdviceVC.view.hidden = self.searchAdviceHidden || ![self.searchAdviceVC.tableView numberOfRowsInSection:0];
+    self.baseSearchTableView.hidden = !self.searchSuggestionHidden && [self.searchSuggestionVC.tableView numberOfRowsInSection:0];
+    self.searchSuggestionVC.view.hidden = self.searchSuggestionHidden || ![self.searchSuggestionVC.tableView numberOfRowsInSection:0];
 }
 
 - (void)setRankTagBackgroundColorHexStrings:(NSArray<NSString *> *)rankTagBackgroundColorHexStrings
@@ -917,6 +969,7 @@
         return;
     }
     
+    //    [self dismissViewControllerAnimated:YES completion:nil];
     [self.navigationController popViewControllerAnimated:YES];
 }
 
@@ -925,8 +978,8 @@
     NSDictionary *info = noti.userInfo;
     self.keyboardHeight = [info[UIKeyboardFrameEndUserInfoKey] CGRectValue].size.height;
     self.keyboardShowing = YES;
-    // Adjust the content inset of Advice view
-    self.searchAdviceVC.tableView.contentInset = UIEdgeInsetsMake(-30, 0, self.keyboardHeight + 30, 0);
+    // Adjust the content inset of suggestion view
+    self.searchSuggestionVC.tableView.contentInset = UIEdgeInsetsMake(-30, 0, self.keyboardHeight + 30, 0);
 }
 
 
@@ -942,7 +995,7 @@
     if (YES == self.swapHotSeachWithSearchHistory) {
         self.hotSearches = self.hotSearches;
     }
-    GPSEARCH_LOG(@"%@", GPSearchEmptySearchHistoryLogText);
+    GPSEARCH_LOG(@"%@", [NSBundle gp_localizedStringForKey:GPSearchEmptySearchHistoryLogText]);
 }
 
 - (void)tagDidCLick:(UITapGestureRecognizer *)gr
@@ -991,7 +1044,7 @@
     [searchBar resignFirstResponder];
     NSString *searchText = searchBar.text;
     if (self.removeSpaceOnSearchString) { // remove sapce on search string
-       searchText = [searchBar.text stringByReplacingOccurrencesOfString:@" " withString:@""];
+        searchText = [searchBar.text stringByReplacingOccurrencesOfString:@" " withString:@""];
     }
     if (self.showSearchHistory && searchText.length > 0) {
         [self.searchHistories removeObject:searchText];
@@ -1026,7 +1079,7 @@
                 self.searchResultController.view.hidden = NO;
                 self.searchResultController.view.top = NO == self.navigationController.navigationBar.translucent ? 0 : CGRectGetMaxY(self.navigationController.navigationBar.frame);
                 self.searchResultController.view.height = self.view.height - self.searchResultController.view.top;
-                self.searchAdviceVC.view.hidden = YES;
+                self.searchSuggestionVC.view.hidden = YES;
             } else {
                 GPSEARCH_LOG(@"GPSearchDebug： searchResultController cannot be nil when searchResultShowMode is GPSearchResultShowModeEmbed.");
             }
@@ -1039,38 +1092,38 @@
     }
 }
 
-#pragma mark - GPSearchAdviceViewDataSource
-- (NSInteger)numberOfSectionsInSearchAdviceView:(UITableView *)searchAdviceView
+#pragma mark - GPSearchSuggestionViewDataSource
+- (NSInteger)numberOfSectionsInSearchSuggestionView:(UITableView *)searchSuggestionView
 {
-    if ([self.dataSource respondsToSelector:@selector(numberOfSectionsInSearchAdviceView:)]) {
-        return [self.dataSource numberOfSectionsInSearchAdviceView:searchAdviceView];
+    if ([self.dataSource respondsToSelector:@selector(numberOfSectionsInSearchSuggestionView:)]) {
+        return [self.dataSource numberOfSectionsInSearchSuggestionView:searchSuggestionView];
     }
     return 1;
 }
 
-- (NSInteger)searchAdviceView:(UITableView *)searchAdviceView numberOfRowsInSection:(NSInteger)section
+- (NSInteger)searchSuggestionView:(UITableView *)searchSuggestionView numberOfRowsInSection:(NSInteger)section
 {
-    if ([self.dataSource respondsToSelector:@selector(searchAdviceView:numberOfRowsInSection:)]) {
-        NSInteger numberOfRow = [self.dataSource searchAdviceView:searchAdviceView numberOfRowsInSection:section];
-        searchAdviceView.hidden = self.searchAdviceHidden || !self.searchBar.text.length || 0 == numberOfRow;
-        self.baseSearchTableView.hidden = !searchAdviceView.hidden;
+    if ([self.dataSource respondsToSelector:@selector(searchSuggestionView:numberOfRowsInSection:)]) {
+        NSInteger numberOfRow = [self.dataSource searchSuggestionView:searchSuggestionView numberOfRowsInSection:section];
+        searchSuggestionView.hidden = self.searchSuggestionHidden || !self.searchBar.text.length || 0 == numberOfRow;
+        self.baseSearchTableView.hidden = !searchSuggestionView.hidden;
         return numberOfRow;
     }
-    return self.searchAdvice.count;
+    return self.searchSuggestions.count;
 }
 
-- (UITableViewCell *)searchAdviceView:(UITableView *)searchAdviceView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+- (UITableViewCell *)searchSuggestionView:(UITableView *)searchSuggestionView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if ([self.dataSource respondsToSelector:@selector(searchAdviceView:cellForRowAtIndexPath:)]) {
-        return [self.dataSource searchAdviceView:searchAdviceView cellForRowAtIndexPath:indexPath];
+    if ([self.dataSource respondsToSelector:@selector(searchSuggestionView:cellForRowAtIndexPath:)]) {
+        return [self.dataSource searchSuggestionView:searchSuggestionView cellForRowAtIndexPath:indexPath];
     }
     return nil;
 }
 
-- (CGFloat)searchAdviceView:(UITableView *)searchAdviceView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+- (CGFloat)searchSuggestionView:(UITableView *)searchSuggestionView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if ([self.dataSource respondsToSelector:@selector(searchAdviceView:heightForRowAtIndexPath:)]) {
-        return [self.dataSource searchAdviceView:searchAdviceView heightForRowAtIndexPath:indexPath];
+    if ([self.dataSource respondsToSelector:@selector(searchSuggestionView:heightForRowAtIndexPath:)]) {
+        return [self.dataSource searchSuggestionView:searchSuggestionView heightForRowAtIndexPath:indexPath];
     }
     return 44.0;
 }
@@ -1095,12 +1148,12 @@
     } else if (self.searchResultController) {
         self.searchResultController.view.hidden = YES;
     }
-    self.baseSearchTableView.hidden = searchText.length && !self.searchAdviceHidden && [self.searchAdviceVC.tableView numberOfRowsInSection:0];
-    self.searchAdviceVC.view.hidden = self.searchAdviceHidden || !searchText.length || ![self.searchAdviceVC.tableView numberOfRowsInSection:0];
-    if (self.searchAdviceVC.view.hidden) {
-        self.searchAdvice = nil;
+    self.baseSearchTableView.hidden = searchText.length && !self.searchSuggestionHidden && [self.searchSuggestionVC.tableView numberOfRowsInSection:0];
+    self.searchSuggestionVC.view.hidden = self.searchSuggestionHidden || !searchText.length || ![self.searchSuggestionVC.tableView numberOfRowsInSection:0];
+    if (self.searchSuggestionVC.view.hidden) {
+        self.searchSuggestions = nil;
     }
-    [self.view bringSubviewToFront:self.searchAdviceVC.view];
+    [self.view bringSubviewToFront:self.searchSuggestionVC.view];
     if ([self.delegate respondsToSelector:@selector(searchViewController:searchTextDidChange:searchText:)]) {
         [self.delegate searchViewController:self searchTextDidChange:searchBar searchText:searchText];
     }
@@ -1110,13 +1163,13 @@
 {
     if (GPSearchResultShowModeEmbed == self.searchResultShowMode) {
         self.searchResultController.view.hidden = 0 == searchBar.text.length || !self.showSearchResultWhenSearchBarRefocused;
-        self.searchAdviceVC.view.hidden = self.searchAdviceHidden || !searchBar.text.length || ![self.searchAdviceVC.tableView numberOfRowsInSection:0];
-        if (self.searchAdviceVC.view.hidden) {
-            self.searchAdvice = nil;
+        self.searchSuggestionVC.view.hidden = self.searchSuggestionHidden || !searchBar.text.length || ![self.searchSuggestionVC.tableView numberOfRowsInSection:0];
+        if (self.searchSuggestionVC.view.hidden) {
+            self.searchSuggestions = nil;
         }
-        self.baseSearchTableView.hidden = searchBar.text.length && !self.searchAdviceHidden && ![self.searchAdviceVC.tableView numberOfRowsInSection:0];
+        self.baseSearchTableView.hidden = searchBar.text.length && !self.searchSuggestionHidden && ![self.searchSuggestionVC.tableView numberOfRowsInSection:0];
     }
-    [self setsearchAdvice:self.searchAdvice];
+    [self setSearchSuggestions:self.searchSuggestions];
     return YES;
 }
 
@@ -1151,12 +1204,12 @@
         
         UIButton *closetButton = [[UIButton alloc] init];
         closetButton.size = CGSizeMake(cell.height, cell.height);
-        [closetButton setImage:[UIImage imageNamed:@"close"] forState:UIControlStateNormal];
-        UIImageView *closeView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"close"]];
+        [closetButton setImage:[NSBundle gp_imageNamed:@"close"] forState:UIControlStateNormal];
+        UIImageView *closeView = [[UIImageView alloc] initWithImage:[NSBundle gp_imageNamed:@"close"]];
         [closetButton addTarget:self action:@selector(closeDidClick:) forControlEvents:UIControlEventTouchUpInside];
         closeView.contentMode = UIViewContentModeCenter;
         cell.accessoryView = closetButton;
-        UIImageView *line = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"cell-content-line"]];
+        UIImageView *line = [[UIImageView alloc] initWithImage:[NSBundle gp_imageNamed:@"cell-content-line"]];
         line.height = 0.5;
         line.alpha = 0.7;
         line.left = GPSEARCH_MARGIN;
@@ -1166,25 +1219,17 @@
         [cell.contentView addSubview:line];
     }
     
-    cell.imageView.image = [UIImage imageNamed:@"search_history"];
+    cell.imageView.image = [NSBundle gp_imageNamed:@"search_history"];
     cell.textLabel.text = self.searchHistories[indexPath.row];
     
     return cell;
 }
 
-
--(UIView*)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section{
-    UIView *vHeader = [UIView new];
-    vHeader = [[UIView alloc] initWithFrame:CGRectMake(0, 0, GPSEARCH_REALY_SCREEN_WIDTH, 30)];
-    UILabel *labelTitle = [[UILabel alloc] initWithFrame:CGRectMake(15,0,vHeader.width -30,vHeader.height)];
-    labelTitle.textAlignment = NSTextAlignmentLeft;
-    labelTitle.font = [UIFont systemFontOfSize:13.0];
-    labelTitle.textColor = [UIColor blackColor];
-    labelTitle.text = self.showSearchHistory && self.searchHistories.count && GPSearchHistoryStyleCell == self.searchHistoryStyle ? (self.searchHistoryTitle.length ? self.searchHistoryTitle : GPSearchSearchHistoryText) : nil;
-    [vHeader addSubview:labelTitle];
-    return vHeader;
-
+- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
+{
+    return self.showSearchHistory && self.searchHistories.count && GPSearchHistoryStyleCell == self.searchHistoryStyle ? (self.searchHistoryTitle.length ? self.searchHistoryTitle : [NSBundle gp_localizedStringForKey:GPSearchSearchHistoryText]) : nil;
 }
+
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
 {
     return self.searchHistories.count && self.showSearchHistory && GPSearchHistoryStyleCell == self.searchHistoryStyle ? 25 : 0.01;
@@ -1201,7 +1246,7 @@
     UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     self.searchBar.text = cell.textLabel.text;
-        
+    
     if ([self.delegate respondsToSelector:@selector(searchViewController:didSelectSearchHistoryAtIndex:searchText:)]) {
         [self.delegate searchViewController:self didSelectSearchHistoryAtIndex:indexPath.row searchText:cell.textLabel.text];
         [self saveSearchCacheAndRefreshView];
@@ -1213,11 +1258,12 @@
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView
 {
     if (self.keyboardShowing) {
-        // Adjust the content inset of Advice view
-        self.searchAdviceVC.tableView.contentInset = UIEdgeInsetsMake(-30, 0, 30, 0);
+        // Adjust the content inset of suggestion view
+        self.searchSuggestionVC.tableView.contentInset = UIEdgeInsetsMake(-30, 0, 30, 0);
         [self.searchBar resignFirstResponder];
     }
 }
 
 
 @end
+

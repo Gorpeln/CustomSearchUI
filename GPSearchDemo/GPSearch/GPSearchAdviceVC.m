@@ -20,12 +20,12 @@
 
 @implementation GPSearchAdviceVC
 
-+ (instancetype)searchAdviceViewControllerWithDidSelectCellBlock:(GPSearchAdviceDidSelectCellBlock)didSelectCellBlock
++ (instancetype)searchSuggestionViewControllerWithDidSelectCellBlock:(GPSearchSuggestionDidSelectCellBlock)didSelectCellBlock
 {
-    GPSearchAdviceVC *searchAdviceVC = [[GPSearchAdviceVC alloc] init];
-    searchAdviceVC.didSelectCellBlock = didSelectCellBlock;
-    searchAdviceVC.automaticallyAdjustsScrollViewInsets = NO;
-    return searchAdviceVC;
+    GPSearchAdviceVC *searchSuggestionVC = [[self alloc] init];
+    searchSuggestionVC.didSelectCellBlock = didSelectCellBlock;
+    searchSuggestionVC.automaticallyAdjustsScrollViewInsets = NO;
+    return searchSuggestionVC;
 }
 
 - (void)viewDidLoad {
@@ -58,26 +58,25 @@
 - (void)keyboradFrameDidShow:(NSNotification *)notification
 {
     self.keyboardDidShow = YES;
-    [self setsearchAdvice:_searchAdvice];
+    [self setSearchSuggestions:_searchSuggestions];
 }
 
 - (void)keyboradFrameDidHidden:(NSNotification *)notification
 {
     self.keyboardDidShow = NO;
     self.originalContentInsetWhenKeyboardHidden = UIEdgeInsetsMake(-30, 0, 30, 0);
-    [self setsearchAdvice:_searchAdvice];
+    [self setSearchSuggestions:_searchSuggestions];
 }
 
 #pragma mark - setter
-- (void)setsearchAdvice:(NSArray<NSString *> *)searchAdvice
+- (void)setSearchSuggestions:(NSArray<NSString *> *)searchSuggestions
 {
-    _searchAdvice = [searchAdvice copy];
+    _searchSuggestions = [searchSuggestions copy];
     
     [self.tableView reloadData];
     
     /**
      * Adjust the searchSugesstionView when the keyboard changes.
-     * more information can see : https://github.com/iphone5solo/GPSearch/issues/61
      */
     if (self.keyboardDidShow && !UIEdgeInsetsEqualToEdgeInsets(self.originalContentInsetWhenKeyboardShow, UIEdgeInsetsZero) && !UIEdgeInsetsEqualToEdgeInsets(self.originalContentInsetWhenKeyboardShow, UIEdgeInsetsMake(-30, 0, 30 - CGRectGetMaxY(self.navigationController.navigationBar.frame), 0))) {
         self.tableView.contentInset =  self.originalContentInsetWhenKeyboardShow;
@@ -85,37 +84,41 @@
         self.tableView.contentInset =  self.originalContentInsetWhenKeyboardHidden;
     }
     self.tableView.contentOffset = CGPointMake(0, -self.tableView.contentInset.top);
+    
+    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 11.0) { // iOS 11
+        self.tableView.contentInset = UIEdgeInsetsMake(-30, 0, 0, 0);
+    }
 }
 
 #pragma mark - Table view data source
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    if ([self.dataSource respondsToSelector:@selector(numberOfSectionsInSearchAdviceView:)]) {
-        return [self.dataSource numberOfSectionsInSearchAdviceView:tableView];
+    if ([self.dataSource respondsToSelector:@selector(numberOfSectionsInSearchSuggestionView:)]) {
+        return [self.dataSource numberOfSectionsInSearchSuggestionView:tableView];
     }
     return 1;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    if ([self.dataSource respondsToSelector:@selector(searchAdviceView:numberOfRowsInSection:)]) {
-        return [self.dataSource searchAdviceView:tableView numberOfRowsInSection:section];
+    if ([self.dataSource respondsToSelector:@selector(searchSuggestionView:numberOfRowsInSection:)]) {
+        return [self.dataSource searchSuggestionView:tableView numberOfRowsInSection:section];
     }
-    return self.searchAdvice.count;
+    return self.searchSuggestions.count;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    if ([self.dataSource respondsToSelector:@selector(searchAdviceView:cellForRowAtIndexPath:)]) {
-        UITableViewCell *cell= [self.dataSource searchAdviceView:tableView cellForRowAtIndexPath:indexPath];
+    if ([self.dataSource respondsToSelector:@selector(searchSuggestionView:cellForRowAtIndexPath:)]) {
+        UITableViewCell *cell= [self.dataSource searchSuggestionView:tableView cellForRowAtIndexPath:indexPath];
         if (cell) return cell;
     }
-
-    static NSString *cellID = @"GPSearchAdviceCellID";
+    
+    static NSString *cellID = @"GPSearchSuggestionCellID";
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellID];
     if (!cell) {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellID];
         cell.textLabel.textColor = [UIColor darkGrayColor];
         cell.textLabel.font = [UIFont systemFontOfSize:14];
         cell.backgroundColor = [UIColor clearColor];
-        UIImageView *line = [[UIImageView alloc] initWithImage: [UIImage imageNamed:@"cell-content-line"]];
+        UIImageView *line = [[UIImageView alloc] initWithImage: [NSBundle gp_imageNamed:@"cell-content-line"]];
         line.height = 0.5;
         line.alpha = 0.7;
         line.left = GPSEARCH_MARGIN;
@@ -123,15 +126,15 @@
         line.width = GPScreenW;
         [cell.contentView addSubview:line];
     }
-    cell.imageView.image = [UIImage imageNamed:@"search"];
-    cell.textLabel.text = self.searchAdvice[indexPath.row];
+    cell.imageView.image = [NSBundle gp_imageNamed:@"search"];
+    cell.textLabel.text = self.searchSuggestions[indexPath.row];
     return cell;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if ([self.dataSource respondsToSelector:@selector(searchAdviceView:heightForRowAtIndexPath:)]) {
-        return [self.dataSource searchAdviceView:tableView heightForRowAtIndexPath:indexPath];
+    if ([self.dataSource respondsToSelector:@selector(searchSuggestionView:heightForRowAtIndexPath:)]) {
+        return [self.dataSource searchSuggestionView:tableView heightForRowAtIndexPath:indexPath];
     }
     return 44.0;
 }
@@ -145,3 +148,5 @@
 }
 
 @end
+
+

@@ -18,7 +18,7 @@
     [super viewDidLoad];
     
     self.title = @"SearchResultVC";
-    self.view.backgroundColor = GPRandomColor;
+    self.view.backgroundColor = GPSEARCH_RANDOM_COLOR;
 }
 
 - (void)didReceiveMemoryWarning {

@@ -8,14 +8,13 @@
 
 #import <UIKit/UIKit.h>
 
-NSString *const GPSearchSearchPlaceholderText = @"搜索内容";
-NSString *const GPSearchHotSearchText = @"热门搜索";
-NSString *const GPSearchSearchHistoryText = @"搜索历史";
-NSString *const GPSearchEmptySearchHistoryText = @"清空搜索历史";
+NSString *const GPSearchSearchPlaceholderText = @"GPSearchSearchPlaceholderText";
+NSString *const GPSearchHotSearchText = @"GPSearchHotSearchText";
+NSString *const GPSearchSearchHistoryText = @"GPSearchSearchHistoryText";
+NSString *const GPSearchEmptySearchHistoryText = @"GPSearchEmptySearchHistoryText";
 
-NSString *const GPSearchEmptyButtonText = @"清空";
-NSString *const GPSearchEmptySearchHistoryLogText = @"清空搜索历史";
-NSString *const GPSearchCancelButtonText = @"取消";
-
+NSString *const GPSearchEmptyButtonText = @"GPSearchEmptyButtonText";
+NSString *const GPSearchEmptySearchHistoryLogText = @"GPSearchEmptySearchHistoryLogText";
+NSString *const GPSearchCancelButtonText = @"GPSearchCancelButtonText";
 
 
