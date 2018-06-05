@@ -406,11 +406,11 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardDidShow:) name:UIKeyboardDidShowNotification object:nil];
     UIButton *cancleButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [cancleButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-    cancleButton.titleLabel.font = [UIFont fontWithName:@"Heiti SC" size:15.0];
+    cancleButton.titleLabel.font = [UIFont fontWithName:@"Heiti SC" size:13.5];
     [cancleButton setTitle:[NSBundle gp_localizedStringForKey:GPSearchCancelButtonText] forState:UIControlStateNormal];
     [cancleButton addTarget:self action:@selector(cancelDidClick)  forControlEvents:UIControlEventTouchUpInside];
     [cancleButton sizeToFit];
-    cancleButton.width += GPSEARCH_MARGIN *2;
+    cancleButton.width += GPSEARCH_MARGIN *3;
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:cancleButton];
     
     /**
@@ -453,7 +453,7 @@
     for (UIView *subView in [[searchBar.subviews lastObject] subviews]) {
         if ([[subView class] isSubclassOfClass:[UITextField class]]) {
             UITextField *textField = (UITextField *)subView;
-            textField.font = [UIFont systemFontOfSize:16];
+            textField.font = [UIFont fontWithName:@"heiti SC" size:13.5];
             _searchTextField = textField;
             break;
         }
