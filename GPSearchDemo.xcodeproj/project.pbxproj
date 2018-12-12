@@ -10,23 +10,23 @@
 		741049091DC202E7006A4D6E /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 741049081DC202E7006A4D6E /* main.m */; };
 		7410490C1DC202E7006A4D6E /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 7410490B1DC202E7006A4D6E /* AppDelegate.m */; };
 		7410490F1DC202E7006A4D6E /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7410490E1DC202E7006A4D6E /* ViewController.m */; };
-		741049121DC202E7006A4D6E /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 741049101DC202E7006A4D6E /* Main.storyboard */; };
 		741049141DC202E7006A4D6E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 741049131DC202E7006A4D6E /* Assets.xcassets */; };
 		741049221DC202E7006A4D6E /* GPSearchDemoTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 741049211DC202E7006A4D6E /* GPSearchDemoTests.m */; };
 		7410492D1DC202E7006A4D6E /* GPSearchDemoUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = 7410492C1DC202E7006A4D6E /* GPSearchDemoUITests.m */; };
 		741049691DC20B2E006A4D6E /* GPSearchStyleListVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 741049661DC20B2E006A4D6E /* GPSearchStyleListVC.m */; };
 		7410496A1DC20B2E006A4D6E /* SearchResultVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 741049681DC20B2E006A4D6E /* SearchResultVC.m */; };
-		741049DE1DC21F4A006A4D6E /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 741049DC1DC21F4A006A4D6E /* LaunchScreen.storyboard */; };
 		741231F91FF4F72E007A4102 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 741231FB1FF4F72E007A4102 /* Localizable.strings */; };
 		741232021FF4FAB2007A4102 /* NSBundle+GPSearch.m in Sources */ = {isa = PBXBuildFile; fileRef = 741232011FF4FAB2007A4102 /* NSBundle+GPSearch.m */; };
+		74219F8021C0DB4400FD0665 /* GPLaunchScreen.png in Resources */ = {isa = PBXBuildFile; fileRef = 74219F7C21C0DB4400FD0665 /* GPLaunchScreen.png */; };
+		74219F8121C0DB4400FD0665 /* icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 74219F7D21C0DB4400FD0665 /* icon.png */; };
+		74219F8221C0DB4400FD0665 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 74219F7E21C0DB4400FD0665 /* LaunchScreen.storyboard */; };
+		74219F8321C0DB4400FD0665 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 74219F7F21C0DB4400FD0665 /* Main.storyboard */; };
 		74A5509A1F94522100BE7188 /* GPSearchConst.m in Sources */ = {isa = PBXBuildFile; fileRef = 74A550841F94522100BE7188 /* GPSearchConst.m */; };
 		74A5509B1F94522100BE7188 /* GPSearchAdviceVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 74A550861F94522100BE7188 /* GPSearchAdviceVC.m */; };
 		74A5509D1F94522100BE7188 /* GPSearchVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 74A5508A1F94522100BE7188 /* GPSearchVC.m */; };
 		74CD57C11FFCB2700019E4A2 /* SuperViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 74CD57BF1FFCB2700019E4A2 /* SuperViewController.m */; };
 		74CD57C41FFCB3220019E4A2 /* m_backArrow@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 74CD57C21FFCB3220019E4A2 /* m_backArrow@3x.png */; };
 		74CD57C51FFCB3220019E4A2 /* m_backArrow@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 74CD57C31FFCB3220019E4A2 /* m_backArrow@2x.png */; };
-		74CD57DB1FFCD44C0019E4A2 /* My_LaunchScreen.png in Resources */ = {isa = PBXBuildFile; fileRef = 74CD57D91FFCD44B0019E4A2 /* My_LaunchScreen.png */; };
-		74CD57DC1FFCD44C0019E4A2 /* icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 74CD57DA1FFCD44C0019E4A2 /* icon.png */; };
 		74D95FD61FF3A15A00AE05D2 /* UIView+Addition.m in Sources */ = {isa = PBXBuildFile; fileRef = 74D95FD11FF3A15900AE05D2 /* UIView+Addition.m */; };
 		74D95FD71FF3A15A00AE05D2 /* UIColor+Addition.m in Sources */ = {isa = PBXBuildFile; fileRef = 74D95FD21FF3A15900AE05D2 /* UIColor+Addition.m */; };
 		74F62F521FF4C4AF00B0ECC2 /* GPSearch.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 74F62F511FF4C4AF00B0ECC2 /* GPSearch.bundle */; };
@@ -56,7 +56,6 @@
 		7410490B1DC202E7006A4D6E /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		7410490D1DC202E7006A4D6E /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
 		7410490E1DC202E7006A4D6E /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
-		741049111DC202E7006A4D6E /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		741049131DC202E7006A4D6E /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		741049181DC202E7006A4D6E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		7410491D1DC202E7006A4D6E /* GPSearchDemoTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = GPSearchDemoTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -69,7 +68,6 @@
 		741049661DC20B2E006A4D6E /* GPSearchStyleListVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GPSearchStyleListVC.m; sourceTree = "<group>"; };
 		741049671DC20B2E006A4D6E /* SearchResultVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SearchResultVC.h; sourceTree = "<group>"; };
 		741049681DC20B2E006A4D6E /* SearchResultVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SearchResultVC.m; sourceTree = "<group>"; };
-		741049DC1DC21F4A006A4D6E /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
 		741231FA1FF4F72E007A4102 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		741231FC1FF4F73C007A4102 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Localizable.strings; sourceTree = "<group>"; };
 		741231FD1FF4F73E007A4102 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -79,6 +77,10 @@
 		741232011FF4FAB2007A4102 /* NSBundle+GPSearch.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSBundle+GPSearch.m"; sourceTree = "<group>"; };
 		742015D91FFB553D00E81162 /* MyPCH.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyPCH.pch; sourceTree = "<group>"; };
 		742015DA1FFB558F00E81162 /* Defines.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Defines.h; sourceTree = "<group>"; };
+		74219F7C21C0DB4400FD0665 /* GPLaunchScreen.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = GPLaunchScreen.png; sourceTree = "<group>"; };
+		74219F7D21C0DB4400FD0665 /* icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon.png; sourceTree = "<group>"; };
+		74219F7E21C0DB4400FD0665 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
+		74219F7F21C0DB4400FD0665 /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
 		74A550711F94522000BE7188 /* GPSearchConst.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GPSearchConst.h; sourceTree = "<group>"; };
 		74A550821F94522000BE7188 /* GPSearchAdviceVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GPSearchAdviceVC.h; sourceTree = "<group>"; };
 		74A550841F94522100BE7188 /* GPSearchConst.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GPSearchConst.m; sourceTree = "<group>"; };
@@ -89,8 +91,6 @@
 		74CD57C01FFCB2700019E4A2 /* SuperViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SuperViewController.h; sourceTree = "<group>"; };
 		74CD57C21FFCB3220019E4A2 /* m_backArrow@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "m_backArrow@3x.png"; sourceTree = "<group>"; };
 		74CD57C31FFCB3220019E4A2 /* m_backArrow@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "m_backArrow@2x.png"; sourceTree = "<group>"; };
-		74CD57D91FFCD44B0019E4A2 /* My_LaunchScreen.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = My_LaunchScreen.png; sourceTree = "<group>"; };
-		74CD57DA1FFCD44C0019E4A2 /* icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon.png; sourceTree = "<group>"; };
 		74D95FD11FF3A15900AE05D2 /* UIView+Addition.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+Addition.m"; sourceTree = "<group>"; };
 		74D95FD21FF3A15900AE05D2 /* UIColor+Addition.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIColor+Addition.m"; sourceTree = "<group>"; };
 		74D95FD31FF3A15900AE05D2 /* UIView+Addition.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+Addition.h"; sourceTree = "<group>"; };
@@ -199,10 +199,10 @@
 				7410490B1DC202E7006A4D6E /* AppDelegate.m */,
 				7410490D1DC202E7006A4D6E /* ViewController.h */,
 				7410490E1DC202E7006A4D6E /* ViewController.m */,
-				74CD57DA1FFCD44C0019E4A2 /* icon.png */,
-				74CD57D91FFCD44B0019E4A2 /* My_LaunchScreen.png */,
-				741049101DC202E7006A4D6E /* Main.storyboard */,
-				741049DC1DC21F4A006A4D6E /* LaunchScreen.storyboard */,
+				74219F7C21C0DB4400FD0665 /* GPLaunchScreen.png */,
+				74219F7D21C0DB4400FD0665 /* icon.png */,
+				74219F7E21C0DB4400FD0665 /* LaunchScreen.storyboard */,
+				74219F7F21C0DB4400FD0665 /* Main.storyboard */,
 				741049131DC202E7006A4D6E /* Assets.xcassets */,
 				741049181DC202E7006A4D6E /* Info.plist */,
 				741231FB1FF4F72E007A4102 /* Localizable.strings */,
@@ -299,7 +299,7 @@
 		741048FC1DC202E7006A4D6E /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0910;
+				LastUpgradeCheck = 1010;
 				ORGANIZATIONNAME = "陈冠鹏";
 				TargetAttributes = {
 					741049031DC202E7006A4D6E = {
@@ -349,14 +349,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				741231F91FF4F72E007A4102 /* Localizable.strings in Resources */,
-				741049DE1DC21F4A006A4D6E /* LaunchScreen.storyboard in Resources */,
-				74CD57DC1FFCD44C0019E4A2 /* icon.png in Resources */,
+				74219F8221C0DB4400FD0665 /* LaunchScreen.storyboard in Resources */,
+				74219F8121C0DB4400FD0665 /* icon.png in Resources */,
 				74CD57C51FFCB3220019E4A2 /* m_backArrow@2x.png in Resources */,
 				74CD57C41FFCB3220019E4A2 /* m_backArrow@3x.png in Resources */,
+				74219F8021C0DB4400FD0665 /* GPLaunchScreen.png in Resources */,
+				74219F8321C0DB4400FD0665 /* Main.storyboard in Resources */,
 				74F62F521FF4C4AF00B0ECC2 /* GPSearch.bundle in Resources */,
 				741049141DC202E7006A4D6E /* Assets.xcassets in Resources */,
-				74CD57DB1FFCD44C0019E4A2 /* My_LaunchScreen.png in Resources */,
-				741049121DC202E7006A4D6E /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -428,14 +428,6 @@
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
-		741049101DC202E7006A4D6E /* Main.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				741049111DC202E7006A4D6E /* Base */,
-			);
-			name = Main.storyboard;
-			sourceTree = "<group>";
-		};
 		741231FB1FF4F72E007A4102 /* Localizable.strings */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -455,6 +447,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
@@ -464,6 +457,7 @@
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
@@ -471,6 +465,7 @@
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
@@ -510,6 +505,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
@@ -519,6 +515,7 @@
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
@@ -526,6 +523,7 @@
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
